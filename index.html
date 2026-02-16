@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISDB | 経営者のためのAI導入セッション</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #1a1a26;
+    --bg-card-hover: #222233;
+    --accent: #c9a84c;
+    --accent-light: #e8ce7a;
+    --accent-dim: rgba(201, 168, 76, 0.15);
+    --text-primary: #f0ece4;
+    --text-secondary: #a8a4a0;
+    --text-muted: #6b6866;
+    --border: rgba(201, 168, 76, 0.2);
+    --border-subtle: rgba(255,255,255,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .container-wide { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+
+  /* === NAV === */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 0;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    transition: padding 0.3s;
+  }
+  nav .container { display: flex; justify-content: space-between; align-items: center; }
+  .logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700; font-size: 1.4rem;
+    letter-spacing: 4px; color: var(--accent);
+  }
+  .logo span { color: var(--text-muted); font-weight: 400; font-size: 0.7rem; letter-spacing: 2px; display: block; margin-top: -2px; }
+  .nav-cta {
+    padding: 10px 28px; background: transparent;
+    border: 1px solid var(--accent); color: var(--accent);
+    font-size: 0.8rem; letter-spacing: 2px;
+    cursor: pointer; transition: all 0.3s;
+    text-decoration: none; font-family: 'Noto Sans JP', sans-serif;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg-primary); }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1920&q=80') center center / cover no-repeat;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.75) 50%, rgba(10,10,15,0.92) 100%);
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-label {
+    display: inline-block;
+    font-size: 0.7rem; letter-spacing: 4px;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 8px 20px; margin-bottom: 40px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+  .hero h1 {
+    font-weight: 900;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.4; margin-bottom: 12px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--accent); position: relative;
+  }
+  .hero h1 em::after {
+    content: ''; position: absolute; bottom: 2px; left: 0; right: 0;
+    height: 2px; background: var(--accent); opacity: 0.4;
+  }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-secondary); font-weight: 300;
+    max-width: 600px; margin-bottom: 50px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .btn-primary {
+    padding: 16px 48px; background: var(--accent); color: var(--bg-primary);
+    font-weight: 700; font-size: 0.9rem; letter-spacing: 1px;
+    border: none; cursor: pointer; transition: all 0.3s;
+    text-decoration: none; font-family: 'Noto Sans JP', sans-serif;
+  }
+  .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.25); }
+  .btn-secondary {
+    padding: 16px 48px; background: transparent; color: var(--text-primary);
+    font-weight: 500; font-size: 0.9rem;
+    border: 1px solid var(--border-subtle); cursor: pointer;
+    transition: all 0.3s; text-decoration: none; font-family: 'Noto Sans JP', sans-serif;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-meta {
+    margin-top: 60px;
+    display: flex; gap: 48px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+  }
+  .hero-meta-item .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--accent); font-weight: 700;
+  }
+  .hero-meta-item .label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; margin-top: 2px; }
+
+  /* === IMAGE SECTIONS === */
+  .img-block {
+    width: 100%; overflow: hidden; position: relative;
+  }
+  .img-block img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .img-block::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to top, var(--bg-primary), transparent);
+  }
+  .img-block::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 120px; z-index: 1;
+    background: linear-gradient(to bottom, var(--bg-primary), transparent);
+  }
+
+  /* === PROBLEM === */
+  .problem { padding: 120px 0; border-top: 1px solid var(--border-subtle); }
+  .section-label { font-size: 0.7rem; letter-spacing: 4px; color: var(--accent); margin-bottom: 16px; }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700; line-height: 1.5; margin-bottom: 48px;
+  }
+  .problem-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  }
+  .problem-image {
+    position: relative; overflow: hidden; aspect-ratio: 4/3;
+  }
+  .problem-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.7) saturate(0.8);
+    transition: transform 0.6s;
+  }
+  .problem-image:hover img { transform: scale(1.03); }
+  .problem-image::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+  .problem-cards { display: flex; flex-direction: column; gap: 20px; }
+  .problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 28px 28px;
+    transition: all 0.4s;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .problem-card:hover { border-color: var(--border); background: var(--bg-card-hover); transform: translateX(4px); }
+  .problem-card .icon {
+    min-width: 44px; height: 44px;
+    background: var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 0.85rem; font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+  .problem-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .problem-card p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+
+  /* === DIFFERENCE === */
+  .difference { padding: 120px 0; border-top: 1px solid var(--border-subtle); }
+  .diff-visual {
+    margin-top: 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .diff-panel {
+    position: relative; padding: 48px 40px;
+    min-height: 420px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    overflow: hidden;
+  }
+  .diff-panel img {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .diff-panel.old img { filter: brightness(0.25) saturate(0.3); }
+  .diff-panel.new img { filter: brightness(0.3) saturate(0.6); }
+  .diff-panel .overlay {
+    position: relative; z-index: 2;
+  }
+  .diff-panel h3 {
+    font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;
+    color: var(--text-muted);
+  }
+  .diff-panel.new h3 { color: var(--accent); }
+  .diff-panel ul { list-style: none; }
+  .diff-panel ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.9rem; color: var(--text-secondary);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .diff-panel ul li:last-child { border-bottom: none; }
+  .diff-panel.old ul li::before { content: '✕'; color: #8b5555; font-size: 0.8rem; margin-top: 3px; }
+  .diff-panel.new ul li::before { content: '◎'; color: var(--accent); font-size: 0.8rem; margin-top: 3px; }
+  .diff-panel.new ul li { color: var(--text-primary); }
+  .diff-panel .panel-tag {
+    position: absolute; top: 24px; left: 28px; z-index: 2;
+    font-size: 0.6rem; letter-spacing: 3px; color: var(--text-muted);
+    background: rgba(10,10,15,0.7); padding: 6px 14px;
+    backdrop-filter: blur(8px);
+  }
+  .diff-panel.new .panel-tag { color: var(--accent); border: 1px solid var(--border); }
+
+  /* === SESSIONS === */
+  .sessions { padding: 120px 0; border-top: 1px solid var(--border-subtle); }
+  .session-timeline { margin-top: 60px; }
+  .session-block {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    margin-bottom: 2px;
+    min-height: 360px;
+  }
+  .session-block:nth-child(even) { direction: rtl; }
+  .session-block:nth-child(even) > * { direction: ltr; }
+  .session-img {
+    position: relative; overflow: hidden;
+  }
+  .session-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.6) saturate(0.7);
+    transition: all 0.6s;
+  }
+  .session-block:hover .session-img img { filter: brightness(0.7) saturate(0.9); transform: scale(1.03); }
+  .session-img .session-badge {
+    position: absolute; top: 24px; left: 24px; z-index: 2;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 700; color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  .session-info {
+    background: var(--bg-card);
+    padding: 48px 44px;
+    display: flex; flex-direction: column; justify-content: center;
+    border: 1px solid var(--border-subtle);
+  }
+  .session-tag {
+    font-size: 0.65rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 12px;
+  }
+  .session-info h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 14px; }
+  .session-info p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 24px; }
+  .session-details {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+  .session-details span { display: flex; align-items: center; gap: 6px; }
+  .session-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--accent); font-weight: 700;
+  }
+
+  /* === FLOW === */
+  .flow { padding: 120px 0; border-top: 1px solid var(--border-subtle); }
+  .flow-hero {
+    margin-top: 48px; margin-bottom: 48px;
+    position: relative; overflow: hidden;
+    height: 300px;
+  }
+  .flow-hero img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.4) saturate(0.6);
+  }
+  .flow-hero .flow-hero-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; z-index: 2;
+  }
+  .flow-hero .flow-hero-text h3 {
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;
+  }
+  .flow-hero .flow-hero-text p {
+    font-size: 0.9rem; color: var(--text-secondary);
+  }
+  .flow-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
+  }
+  .flow-step {
+    background: var(--bg-card); padding: 32px 20px;
+    text-align: center; transition: all 0.3s;
+    position: relative;
+  }
+  .flow-step:hover { background: var(--bg-card-hover); }
+  .flow-step::after {
+    content: '→';
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent); opacity: 0.4; z-index: 2;
+    font-size: 1.2rem;
+  }
+  .flow-step:last-child::after { display: none; }
+  .flow-step .step-time {
+    font-size: 0.6rem; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 14px;
+  }
+  .flow-step .step-icon {
+    width: 48px; height: 48px;
+    background: var(--accent-dim); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px; font-size: 1.2rem;
+  }
+  .flow-step h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+  .flow-step p { font-size: 0.75rem; color: var(--text-secondary); }
+  .flow-step .step-who {
+    margin-top: 10px; font-size: 0.65rem; color: var(--accent); letter-spacing: 1px;
+  }
+
+  /* === TEAM === */
+  .team { padding: 120px 0; border-top: 1px solid var(--border-subtle); }
+  .team-intro {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center; margin-bottom: 60px;
+  }
+  .team-intro-image {
+    position: relative; overflow: hidden; aspect-ratio: 16/10;
+  }
+  .team-intro-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.7) saturate(0.8);
+  }
+  .team-intro-image::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid var(--border);
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 32px 28px;
+    transition: all 0.3s;
+  }
+  .team-card:hover { border-color: var(--border); }
+  .team-card .role-tag { font-size: 0.6rem; letter-spacing: 3px; color: var(--accent); margin-bottom: 10px; }
+  .team-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+  .team-card p { font-size: 0.82rem; color: var(--text-secondary); }
+
+  /* === CTA === */
+  .cta-section {
+    padding: 0; position: relative; overflow: hidden;
+    min-height: 500px; display: flex; align-items: center; justify-content: center;
+  }
+  .cta-bg {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  }
+  .cta-bg img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.2) saturate(0.4);
+  }
+  .cta-bg::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.1) 0%, transparent 70%);
+  }
+  .cta-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 80px 24px;
+  }
+  .cta-content h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900; margin-bottom: 16px;
+  }
+  .cta-content p {
+    font-size: 1rem; color: var(--text-secondary);
+    max-width: 500px; margin: 0 auto 48px;
+  }
+  .cta-content .btn-primary { padding: 20px 64px; font-size: 1rem; }
+  .cta-info {
+    margin-top: 40px;
+    display: flex; justify-content: center; gap: 48px;
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+
+  /* === FOOTER === */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+  }
+  footer .logo { margin-bottom: 16px; display: inline-block; }
+  footer p { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 900px) {
+    .problem-layout { grid-template-columns: 1fr; }
+    .problem-image { max-height: 280px; }
+    .diff-visual { grid-template-columns: 1fr; }
+    .session-block, .session-block:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+    .session-img { height: 240px; }
+    .flow-steps { grid-template-columns: 1fr 1fr; }
+    .flow-step::after { display: none; }
+    .team-intro { grid-template-columns: 1fr; }
+    .hero-meta { flex-direction: column; gap: 24px; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+    .cta-info { flex-direction: column; gap: 12px; }
+  }
+  @media (max-width: 600px) {
+    .flow-steps { grid-template-columns: 1fr; }
+    .diff-panel { min-height: 320px; padding: 36px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="logo">ISDB<span>AI × MANAGEMENT</span></div>
+    <a href="#apply" class="nav-cta">SESSION 1 に参加する</a>
+  </div>
+</nav>
+
+<!-- HERO with background image -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1920&q=80" alt="" style="width:100%;height:100%;object-fit:cover;">
+  </div>
+  <div class="container hero-inner">
+    <div class="hero-label">EXECUTIVE AI SESSION SERIES</div>
+    <h1>
+      AI導入で、<br>
+      会社の<em>何が変わるのか</em>。
+    </h1>
+    <p class="hero-sub">
+      ツール講座ではありません。<br>
+      社長が判断する材料を持ち帰る場です。
+    </p>
+    <div class="hero-actions">
+      <a href="#apply" class="btn-primary">Session 1 に申し込む</a>
+      <a href="#sessions" class="btn-secondary">セッション詳細を見る</a>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="num">3</div>
+        <div class="label">ステップ構成</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="num">90<span style="font-size:1rem">min</span></div>
+        <div class="label">〜 120分 / 回</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="num">¥10,000<span style="font-size:0.9rem">〜</span></div>
+        <div class="label">Session 1 参加費</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM with side image -->
+<section class="problem reveal">
+  <div class="container">
+    <div class="section-label">PROBLEM</div>
+    <h2 class="section-title">AI導入で失敗する会社の<br>共通点をご存知ですか？</h2>
+    <div class="problem-layout">
+      <div class="problem-image">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80" alt="経営会議の風景">
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card">
+          <div class="icon">01</div>
+          <div>
+            <h3>社員任せにしている</h3>
+            <p>「AIに詳しい社員に任せた」結果、経営と現場にズレが生まれ、投資が成果に結びつかない。</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="icon">02</div>
+          <div>
+            <h3>ツールから入ってしまう</h3>
+            <p>ChatGPTを入れた。だが、何を解決するか決めていない。ツール先行では組織は変わらない。</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <div class="icon">03</div>
+          <div>
+            <h3>経営判断が抜けている</h3>
+            <p>社長が最初に見るべき3つの指標を知らないまま、導入を進めてしまっている。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCE with split photo panels -->
+<section class="difference reveal">
+  <div class="container">
+    <div class="section-label">DIFFERENCE</div>
+    <h2 class="section-title">普通のAIセミナーとの違い</h2>
+  </div>
+  <div class="container-wide">
+    <div class="diff-visual">
+      <div class="diff-panel old">
+        <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=900&q=80" alt="一般的なセミナー">
+        <div class="panel-tag">一般的なAIセミナー</div>
+        <div class="overlay">
+          <ul>
+            <li>技術者が主役で社長は聞くだけ</li>
+            <li>「わかった」で終わってしまう</li>
+            <li>自社にどう使うか分からない</li>
+            <li>導入の順番が見えない</li>
+          </ul>
+        </div>
+      </div>
+      <div class="diff-panel new">
+        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80" alt="ISDBセッション">
+        <div class="panel-tag">ISDB SESSION</div>
+        <div class="overlay">
+          <ul>
+            <li>技術で可能性を見せ、経営に翻訳する</li>
+            <li>「動こう」に変化させる設計</li>
+            <li>自社に当てはめるワーク付き</li>
+            <li>社長の意思決定の順番を整理</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SESSIONS with photos -->
+<section class="sessions reveal" id="sessions">
+  <div class="container">
+    <div class="section-label">SESSION SERIES</div>
+    <h2 class="section-title">3つのセッションで<br>「気づき」から「行動」へ</h2>
+  </div>
+  <div class="container-wide">
+    <div class="session-timeline">
+      <!-- Session 1 -->
+      <div class="session-block">
+        <div class="session-img">
+          <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=900&q=80" alt="プレゼンテーション">
+          <div class="session-badge">01</div>
+        </div>
+        <div class="session-info">
+          <div class="session-tag">公開募集 ─ 気づき</div>
+          <h3>AI導入で会社の何が変わるのか</h3>
+          <p>経営視点でAIを捉え直す。社長が最初に見るべき指標、失敗の共通点、社員任せにすると起きるズレ。技術デモで可能性を見せた後、経営に翻訳します。</p>
+          <div class="session-details">
+            <span class="session-price">¥10,000 〜 18,000</span>
+            <span>⏱ 90〜120分</span>
+            <span>👤 公開募集</span>
+          </div>
+        </div>
+      </div>
+      <!-- Session 2 -->
+      <div class="session-block">
+        <div class="session-img">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80" alt="ワークショップ">
+          <div class="session-badge">02</div>
+        </div>
+        <div class="session-info">
+          <div class="session-tag">半クローズ ─ 判断</div>
+          <h3>自社にAIを当てはめる設計ワーク</h3>
+          <p>Session 1 参加者のみご案内。業務分解（BPR視点）、AI適用マップ作成、導入ロードマップの作り方を少人数で実践します。</p>
+          <div class="session-details">
+            <span class="session-price">¥30,000 〜 50,000</span>
+            <span>⏱ 少人数制</span>
+            <span>👤 Session 1 参加者限定</span>
+          </div>
+        </div>
+      </div>
+      <!-- Session 3 -->
+      <div class="session-block">
+        <div class="session-img">
+          <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=80" alt="1対1ミーティング">
+          <div class="session-badge">03</div>
+        </div>
+        <div class="session-info">
+          <div class="session-tag">個別 ─ 行動</div>
+          <h3>AI経営伴走プログラム説明＆診断</h3>
+          <p>個別形式で現状診断を行い、AI経営伴走プログラムについてご説明。本セッションの内容は、通常プログラムの最初の1ヶ月で一緒にやる内容です。</p>
+          <div class="session-details">
+            <span class="session-price">伴走プログラムへ</span>
+            <span>⏱ 個別 or 小人数</span>
+            <span>👤 完全招待制</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW (Session 1 Details) -->
+<section class="flow reveal">
+  <div class="container">
+    <div class="section-label">SESSION 1 FLOW</div>
+    <h2 class="section-title">Session 1 の流れ</h2>
+  </div>
+  <div class="container-wide">
+    <div class="flow-hero">
+      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=80" alt="セミナー会場">
+      <div class="flow-hero-text">
+        <h3>90〜120分で「視点」が変わる</h3>
+        <p>技術 → 経営 → 対話。3つの軸で設計されたセッション。</p>
+      </div>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-time">0:00 — 0:10</div>
+        <div class="step-icon">🎤</div>
+        <h4>オープニング</h4>
+        <p>趣旨説明・チーム紹介</p>
+        <div class="step-who">白木</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-time">0:10 — 0:30</div>
+        <div class="step-icon">🧭</div>
+        <h4>経営イントロ</h4>
+        <p>AI導入の誤解・社長が考えるべきこと</p>
+        <div class="step-who">Zack</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-time">0:30 — 1:00</div>
+        <div class="step-icon">⚡</div>
+        <h4>技術デモ＆事例</h4>
+        <p>3事例に絞った実装デモ</p>
+        <div class="step-who">上田</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-time">1:00 — 1:15</div>
+        <div class="step-icon">🔄</div>
+        <h4>翻訳セッション</h4>
+        <p>技術→経営の橋渡し</p>
+        <div class="step-who">Zack</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-time">1:15 — 1:30</div>
+        <div class="step-icon">💬</div>
+        <h4>Q&A・クロージング</h4>
+        <p>質問を経営側に寄せる対話</p>
+        <div class="step-who">Zack × 白木</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team reveal">
+  <div class="container">
+    <div class="section-label">TEAM</div>
+    <div class="team-intro">
+      <div>
+        <h2 class="section-title" style="margin-bottom:20px;">技術・経営・伴走・進行。<br>専門チームが設計する<br>セッション。</h2>
+        <p style="font-size:0.92rem;color:var(--text-secondary);">技術の可能性を見せ、経営に翻訳し、現場に落とし込む。それぞれの専門性が噛み合うからこそ「わかった」を「動こう」に変えられる。</p>
+      </div>
+      <div class="team-intro-image">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80" alt="チームコラボレーション">
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="role-tag">経営ナビゲーター</div>
+        <h3>Zack</h3>
+        <p>セッション設計・経営視点の問い・翻訳セッション。技術を「意思決定」に変換する。</p>
+      </div>
+      <div class="team-card">
+        <div class="role-tag">実装スペシャリスト</div>
+        <h3>上田</h3>
+        <p>ツール紹介・ワークフロー事例・デモ。可能性を"見せる"役割。</p>
+      </div>
+      <div class="team-card">
+        <div class="role-tag">進行ファシリテーター</div>
+        <h3>白木</h3>
+        <p>場の空気をつくり、導線を設計。イベント全体の舵取り。</p>
+      </div>
+      <div class="team-card">
+        <div class="role-tag">AI家庭教師</div>
+        <h3>鳥</h3>
+        <p>実践フォロー。社員が"つまずくポイント"を現場目線でサポート。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA with background image -->
+<section class="cta-section reveal" id="apply">
+  <div class="cta-bg">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1920&q=80" alt="">
+  </div>
+  <div class="cta-content">
+    <div class="section-label">APPLY NOW</div>
+    <h2>「聞いた」から<br>「考えたい」へ。</h2>
+    <p>まずは Session 1 で、社長が見るべきAIの視点を手に入れてください。</p>
+    <a href="#" class="btn-primary">Session 1 に申し込む</a>
+    <div class="cta-info">
+      <span>💰 ¥10,000 〜 18,000</span>
+      <span>⏱ 90〜120分</span>
+      <span>📍 Peatixにて受付</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="logo">ISDB<span>AI × MANAGEMENT</span></div>
+    <p>&copy; 2025 ISDB. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.padding = window.scrollY > 80 ? '12px 0' : '20px 0';
+  });
+</script>
+
+</body>
+</html>
